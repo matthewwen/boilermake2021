@@ -40,8 +40,7 @@ class UserCommandInfo(UserCommand):
 
             for d, f in zip(instrumental_data, fund):
                 if None in [d, f]:
-                    message = "'" + s + "' stock symbol doesn't exist."
-                    self.response.set_state(False)
+                    message = "❌ '" + s + "' stock symbol doesn't exist."
                     self.response.add_response(message)
                     continue
                 name = d['simple_name']
@@ -54,7 +53,6 @@ class UserCommandInfo(UserCommand):
                 industry = f['industry']
 
                 message = company_stock_info(name, symbol, price, market, details, industry, link)
-                self.response.set_state(True)
                 self.response.add_response(message)
 
         if len(self.response.response) == 0:

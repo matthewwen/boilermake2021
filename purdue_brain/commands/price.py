@@ -20,8 +20,7 @@ class UserCommandPrice(UserCommand):
             dict = r.stocks.find_instrument_data(stock)
             for d in dict:
                 if None in [d]:
-                    message = "'" + s + "' stock symbol doesn't exist."
-                    self.response.set_state(False)
+                    message = "❌ '" + s + "' stock symbol doesn't exist."
                     self.response.add_response(message)
                     continue
 

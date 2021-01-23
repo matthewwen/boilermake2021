@@ -44,7 +44,7 @@ def create_direct_command(content):
         ('$natalie', UserCommandNewCommand), ('$price', UserCommandPrice), ('$info', UserCommandInfo),
         ('$trade_info', UserCommandTradeInfo), ('$help', UserCommandHelp), ('$trade_help', UserCommandTradeHelp),
         ('$order', UserCommandTrade), ('$deposit', UserCommandDeposit), ('$withdraw', UserCommandWithdraw),
-        ('$crypto_info', UserCommandCryptoInfo)
+        ('$crypto_price', UserCommandCryptoInfo)
     ])
 
 
