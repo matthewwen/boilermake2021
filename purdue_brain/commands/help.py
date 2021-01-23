@@ -13,6 +13,7 @@ class UserCommandHelp(UserCommand):
         message = create_simple_message('$price [SYMBOL]', 'Gives the current price of the stock', embed=message)
         message = create_simple_message('$info [SYMBOL]', "Gives some general information about the stock and it's company", embed=message)
         message = create_simple_message('$trade_info [SYMBOL]', "Gives detailed information about the stock", embed=message)
+        message = create_simple_message('$deposit [USD]', "Allows you to deposit money from your connected bank account", embed=message)
         message = create_simple_message('$trade_help', 'Gives detailed information about trading commands', embed=message)
 
         self.response.set_state(True)
