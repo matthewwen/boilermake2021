@@ -42,10 +42,9 @@ async def run(obj, message, response):
 
 async def handle_direct_message(message, response: UserResponse):
     if not response.done:
-        if type(message.channel) is not discord.DMChannel:
-            return
-        content = message.content.lower()
-        await run(create_direct_command(content), message, response)
+        if type(message.channel) is discord.TextChannel and str(message.channel.id) == os.getenv('DISCORD_CHANNEL'):
+            content = message.content.lower()
+            await run(create_direct_command(content), message, response)
 
 
 @client.event
@@ -58,6 +57,7 @@ async def on_message(message):
     if response.done:
         await response.send_message(message)
         return
+
 
 # @client.event
 # async def on_message(message):

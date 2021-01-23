@@ -18,29 +18,30 @@ class UserCommandInfo(UserCommand):
 
     def __init__(self, author, content, response: UserResponse):
         super().__init__(author, content, response)
-        print(content)
 
     async def run(self):
         r.login(os.getenv('ROBINHOOD_USERNAME'), os.getenv('ROBINHOOD_PASSWORD'))
-        stock = self.content.replace('$info ', '').upper()
-        dict = r.stocks.find_instrument_data(stock)
-        fund = r.stocks.get_fundamentals(stock)
+        stock = self.content.replace('$info ', '').upper().split()
+        for s in stock:
+            instrumental_data = r.stocks.find_instrument_data(s)
+            fund = r.stocks.get_fundamentals(s)
 
-        for d, f in zip(dict, fund):
-            if None in [d, f]:
-                continue
-            name = d['simple_name']
-            symbol = d['symbol']
-            price = r.stocks.get_latest_price(symbol)[0]
-            link = 'https://robinhood.com/stocks/' + symbol
+            for d, f in zip(instrumental_data, fund):
+                if None in [d, f]:
+                    continue
+                name = d['simple_name']
+                symbol = d['symbol']
+                price = r.stocks.get_latest_price(symbol)[0]
+                link = 'https://robinhood.com/stocks/' + symbol
 
-            details = f['description']
-            market = f['market_cap']
-            industry = f['industry']
+                details = f['description']
+                market = f['market_cap']
+                industry = f['industry']
 
-            message = company_stock_info(name, symbol, price, market, details, industry, link)
-            self.response.set_state(True)
-            self.response.add_response(message)
-        if not self.response.done:
+                message = company_stock_info(name, symbol, price, market, details, industry, link)
+                self.response.set_state(True)
+                self.response.add_response(message)
+
+        if len(self.response.response) == 0:
             self.response.set_error_response(0)
         self.response.done = True
