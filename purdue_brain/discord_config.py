@@ -7,6 +7,7 @@ import random
 from purdue_brain.commands.HelloWorld import UserCommandHelloWorld
 from purdue_brain.commands.NewCommand import UserCommandNewCommand
 from purdue_brain.commands.help import UserCommandHelp
+from purdue_brain.commands.TradeHelp import UserCommandTradeHelp
 from purdue_brain.commands.price import UserCommandPrice
 from purdue_brain.commands.info import UserCommandInfo
 from purdue_brain.commands.command import UserCommand
@@ -32,7 +33,7 @@ def create_direct_command(content):
     return iterate_commands(content, [
         ('$hi', UserCommand), ('$helloworld', UserCommandHelloWorld),
         ('$natalie', UserCommandNewCommand), ('$price', UserCommandPrice), ('$info', UserCommandInfo),
-        ('$trade_info', UserCommandTradeInfo), ('$help', UserCommandHelp)
+        ('$trade_info', UserCommandTradeInfo), ('$help', UserCommandHelp), ('$trade_help', UserCommandTradeHelp)
     ])
 
 
