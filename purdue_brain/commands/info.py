@@ -10,8 +10,7 @@ def cut_off_sentence(details):
     last_period_idx = new_details.rfind('.')
 
     if cut_it_off:
-        new_details = new_details[:last_period_idx]
-        new_details += "..."
+        new_details = new_details[:last_period_idx + 1]
 
     return new_details
 
