@@ -38,9 +38,12 @@ def create_direct_command(content):
         ('$hi', UserCommand), ('$helloworld', UserCommandHelloWorld),
         ('$natalie', UserCommandNewCommand), ('$price', UserCommandPrice), ('$info', UserCommandInfo),
         ('$trade_info', UserCommandTradeInfo), ('$help', UserCommandHelp), ('$trade_help', UserCommandTradeHelp),
-        ('$order', UserCommandTrade), ('$deposit', UserCommandDeposit), ('$withdraw', UserCommandWithdraw)
+        ('$order', UserCommandTrade), ('$deposit', UserCommandDeposit), ('$withdraw', UserCommandWithdraw),
+        ('$order_buy_market', UserCommandTrade), ('$order_sell_market', UserCommandTrade), ('$order_buy_limit', UserCommandTrade),
+        ('$order_sell_limit', UserCommandTrade), ('$order_buy_stop_loss', UserCommandTrade),
+        ('$order_buy_trailing_stop', UserCommandTrade), ('$order_sell_trailing_stop', UserCommandTrade), ('$order_trailing_stop', UserCommandTrade),
+        ('$order_sell_stop_limit', UserCommandTrade)
     ])
-
 
 async def run(obj, message, response):
     if obj is not None:
