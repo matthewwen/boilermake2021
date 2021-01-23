@@ -4,14 +4,27 @@ import robin_stocks as r
 import os
 
 
+def cut_off_sentence(details):
+    cut_it_off = len(details) > 500
+    new_details = details[:500]
+    last_period_idx = new_details.rfind('.')
+
+    if cut_it_off:
+        new_details = new_details[:last_period_idx]
+        new_details += "..."
+
+    return new_details
+
+
 def company_stock_info(name, symbol, price, market, details, industry, link):
     message = create_simple_message('Company', name)
     message = create_simple_message('Symbol', symbol, embed=message)
+    message = create_simple_message('Price per share', '${:,.2f}'.format(float(price)), embed=message)
     message = create_simple_message('Market cap', '${:,.2f}'.format(float(market)), embed=message)
-    message = create_simple_message('About', details, embed=message)
+    message = create_simple_message('About', f'{cut_off_sentence(details)}', embed=message)
     message = create_simple_message('Industry', industry, embed=message)
     message = create_simple_message('More info', link, embed=message)
-    return create_simple_message('Price per share', '${:,.2f}'.format(float(price)), embed=message)
+    return message
 
 
 class UserCommandInfo(UserCommand):
