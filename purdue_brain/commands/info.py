@@ -40,6 +40,9 @@ class UserCommandInfo(UserCommand):
 
             for d, f in zip(instrumental_data, fund):
                 if None in [d, f]:
+                    message = "ERROR: Cant find 'stock' stock"
+                    self.response.set_state(True)
+                    self.response.add_response(message)
                     continue
                 name = d['simple_name']
                 symbol = d['symbol']
