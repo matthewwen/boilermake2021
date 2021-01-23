@@ -41,6 +41,9 @@ class UserCommandTradeInfo(UserCommand):
 
             for d, d2 in zip(fund, instrumental_data):
                 if None in d:
+                    message = "'" + s + "' stock symbol doesn't exist."
+                    self.response.set_state(False)
+                    self.response.add_response(message)
                     continue
                 name = d2['simple_name']
                 symbol = d2['symbol']
