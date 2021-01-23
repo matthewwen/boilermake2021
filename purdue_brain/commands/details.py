@@ -3,18 +3,6 @@ from purdue_brain.common import UserResponse, create_simple_message
 import robin_stocks as r
 import os
 
-
-def cut_off_sentence(details):
-    cut_it_off = len(details) > 500
-    new_details = details[:500]
-    last_period_idx = new_details.rfind('.')
-
-    if cut_it_off:
-        new_details = new_details[:last_period_idx + 1]
-
-    return new_details
-
-
 def company_stock_info(name, symbol, price, market, details, industry, link):
     message = create_simple_message('Company', name)
     message = create_simple_message('Symbol', symbol, embed=message)
@@ -33,6 +21,7 @@ class UserCommandInfo(UserCommand):
 
     async def run(self):
         r.login(os.getenv('ROBINHOOD_USERNAME'), os.getenv('ROBINHOOD_PASSWORD'))
+        details = r.account.load_phoenix_account()
         stock = self.content.replace('$info ', '').upper().split()
         for s in stock:
             instrumental_data = r.stocks.find_instrument_data(s)
@@ -40,7 +29,8 @@ class UserCommandInfo(UserCommand):
 
             for d, f in zip(instrumental_data, fund):
                 if None in [d, f]:
-                    message = "❌ '" + s + "' stock symbol doesn't exist."
+                    message = "'" + s + "' stock symbol doesn't exist."
+                    self.response.set_state(False)
                     self.response.add_response(message)
                     continue
                 name = d['simple_name']
@@ -53,6 +43,7 @@ class UserCommandInfo(UserCommand):
                 industry = f['industry']
 
                 message = company_stock_info(name, symbol, price, market, details, industry, link)
+                self.response.set_state(True)
                 self.response.add_response(message)
 
         if len(self.response.response) == 0:
