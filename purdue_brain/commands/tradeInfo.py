@@ -40,7 +40,7 @@ class UserCommandTradeInfo(UserCommand):
             fund = r.stocks.get_fundamentals(s)
 
             for d, d2 in zip(fund, instrumental_data):
-                if None in d:
+                if None in [d, d2]:
                     message = "'" + s + "' stock symbol doesn't exist."
                     self.response.set_state(False)
                     self.response.add_response(message)
