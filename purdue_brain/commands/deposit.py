@@ -13,13 +13,11 @@ class UserCommandDeposit(UserCommand):
         list_dict = r.account.deposit_funds_to_robinhood_account(d['url'], args)
         did_perform = True
         try:
-            message = 'Transaction successful: ' + '${:,.2f}'.format(display_arg) + ' is currently ' + list_dict[
+            message = '✅ Deposit successful: ' + '${:,.2f}'.format(display_arg) + ' is currently ' + list_dict[
                 'state']
-            self.response.set_state(True)
         except:
             did_perform = False
-            message = 'Transaction unsuccessful.'
-            self.response.set_state(False)
+            message = '❌ Deposit unsuccessful.'
         return did_perform, message
 
     async def run(self):
@@ -27,15 +25,58 @@ class UserCommandDeposit(UserCommand):
         args = self.content.replace('$deposit ', '').upper()
         details = r.account.get_linked_bank_accounts()
         for d in details:
-            args = float(args)
-            if args <= 0 or args > 500:
-                message = "Transaction failed: Amount is too much"
-                successful = False
-            elif os.getenv('CONNECT') == 'True':
-                message, successful = self.parse_transaction(args, args, d)
-            else:
-                message, successful = self.parse_transaction(0.01, args, d)
-            self.response.add_response(message)
+            try:
+                args = float(args)
+                if args <= 0 or args > 500:
+                    message = "🛑 Deposit Stopped: Amount needs to be between $0.01 and $499.99"
+                    successful = False
+                elif os.getenv('CONNECT') == 'True':
+                    successful, message = self.parse_transaction(args, args, d)
+                else:
+                    successful, message = self.parse_transaction(0.01, args, d)
+                self.response.add_response(message)
+            except:
+                message = '❌ Error: Make sure to include only numbers in your command!'
+                self.response.add_response(message)
+
+        if len(self.response.response) == 0:
+            self.response.set_error_response(0)
+        self.response.done = True
+
+class UserCommandWithdraw(UserCommand):
+
+    def __init__(self, author, content, response: UserResponse):
+        super().__init__(author, content, response)
+
+    def parse_withdraw(self, args, display_arg, d):
+        list_dict = r.account.withdrawl_funds_to_bank_account(d['url'], args)
+        did_perform = True
+        try:
+            message = '✅ Withdrawal successful: ' + '${:,.2f}'.format(display_arg) + ' is currently ' + list_dict[
+                'state']
+        except:
+            did_perform = False
+            message = '❌ Withdrawal unsuccessful.'
+        return did_perform, message
+
+    async def run(self):
+        r.login(os.getenv('ROBINHOOD_USERNAME'), os.getenv('ROBINHOOD_PASSWORD'))
+        args = self.content.replace('$withdraw ', '').upper()
+        details = r.account.get_linked_bank_accounts()
+        for d in details:
+            try:
+                args = float(args)
+                if args <= 0 or args > 500:
+                    message = "🛑 Withdrawal Stopped: Amount needs to be between $0.01 and $499.99"
+                    successful = False
+                elif os.getenv('CONNECT') == 'True':
+                    successful, message = self.parse_withdraw(args, args, d)
+                else:
+                    successful, message = self.parse_withdraw(0.01, args, d)
+                self.response.add_response(message)
+            except:
+                message = '❌ Error: Make sure to include only numbers in your command!'
+                self.response.add_response(message)
 
         if len(self.response.response) == 0:
             self.response.set_error_response(0)

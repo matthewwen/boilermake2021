@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 from purdue_brain.commands.AddNessie import UserAddApiKey
 from purdue_brain.commands.HelloWorld import UserCommandHelloWorld
 from purdue_brain.commands.NewCommand import UserCommandNewCommand
-from purdue_brain.commands.deposit import UserCommandDeposit
+from purdue_brain.commands.deposit import UserCommandDeposit, UserCommandWithdraw
 from purdue_brain.commands.help import UserCommandHelp
 from purdue_brain.commands.TradeHelp import UserCommandTradeHelp
 from purdue_brain.commands.Trade import UserCommandTrade
@@ -38,7 +38,7 @@ def create_direct_command(content):
         ('$hi', UserCommand), ('$helloworld', UserCommandHelloWorld),
         ('$natalie', UserCommandNewCommand), ('$price', UserCommandPrice), ('$info', UserCommandInfo),
         ('$trade_info', UserCommandTradeInfo), ('$help', UserCommandHelp), ('$trade_help', UserCommandTradeHelp),
-        ('$order', UserCommandTrade), ('$deposit', UserCommandDeposit)
+        ('$order', UserCommandTrade), ('$deposit', UserCommandDeposit), ('$withdraw', UserCommandWithdraw)
     ])
 
 
@@ -81,7 +81,7 @@ async def my_background_task():
     while True:
         counter += 1
         message = create_simple_message('Hello There', f'counter: {counter}')
-        await channel.send(embed=message)
+        # await channel.send(embed=message)
         await asyncio.sleep(10)  # task runs every 60 seconds
 
 
