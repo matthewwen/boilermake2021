@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from discord.ext import commands
 import random
 
+from purdue_brain.commands.AddNessie import UserGetApiLink, UserAddApiKey
 from purdue_brain.commands.HelloWorld import UserCommandHelloWorld
 from purdue_brain.commands.NewCommand import UserCommandNewCommand
 from purdue_brain.commands.help import UserCommandHelp
@@ -32,6 +33,7 @@ async def on_ready():
 
 def create_direct_command(content):
     return iterate_commands(content, [
+        ('$help_bank', UserGetApiLink), ('$add_bank_key', UserAddApiKey),
         ('$hi', UserCommand), ('$helloworld', UserCommandHelloWorld),
         ('$natalie', UserCommandNewCommand), ('$price', UserCommandPrice), ('$info', UserCommandInfo),
         ('$trade_info', UserCommandTradeInfo), ('$help', UserCommandHelp), ('$trade_help', UserCommandTradeHelp),
