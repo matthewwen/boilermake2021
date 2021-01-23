@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 from purdue_brain.commands.AddNessie import UserAddApiKey
 from purdue_brain.commands.HelloWorld import UserCommandHelloWorld
 from purdue_brain.commands.NewCommand import UserCommandNewCommand
+from purdue_brain.commands.cryptoInfo import UserCommandCryptoInfo
 from purdue_brain.commands.deposit import UserCommandDeposit, UserCommandWithdraw
 from purdue_brain.commands.help import UserCommandHelp
 from purdue_brain.commands.TradeHelp import UserCommandTradeHelp
@@ -32,13 +33,18 @@ async def on_ready():
     pass
 
 
+class UserCommandDetails(object):
+    pass
+
+
 def create_direct_command(content):
     return iterate_commands(content, [
         ('$add_bank', UserAddApiKey),
         ('$hi', UserCommand), ('$helloworld', UserCommandHelloWorld),
         ('$natalie', UserCommandNewCommand), ('$price', UserCommandPrice), ('$info', UserCommandInfo),
         ('$trade_info', UserCommandTradeInfo), ('$help', UserCommandHelp), ('$trade_help', UserCommandTradeHelp),
-        ('$order', UserCommandTrade), ('$deposit', UserCommandDeposit), ('$withdraw', UserCommandWithdraw)
+        ('$order', UserCommandTrade), ('$deposit', UserCommandDeposit), ('$withdraw', UserCommandWithdraw),
+        ('$crypto_info', UserCommandCryptoInfo)
     ])
 
 
