@@ -9,6 +9,7 @@ from purdue_brain.commands.NewCommand import UserCommandNewCommand
 from purdue_brain.commands.price import UserCommandPrice
 from purdue_brain.commands.info import UserCommandInfo
 from purdue_brain.commands.command import UserCommand
+from purdue_brain.commands.tradeInfo import UserCommandTradeInfo
 from purdue_brain.common import UserResponse
 from purdue_brain.common.utils import iterate_commands
 from purdue_brain.wrappers.discord_wrapper import DiscordWrapper
@@ -29,7 +30,8 @@ async def on_ready():
 def create_direct_command(content):
     return iterate_commands(content, [
         ('$hi', UserCommand), ('$helloworld', UserCommandHelloWorld),
-        ('$natalie', UserCommandNewCommand), ('$price', UserCommandPrice), ('$info', UserCommandInfo)
+        ('$natalie', UserCommandNewCommand), ('$price', UserCommandPrice), ('$info', UserCommandInfo),
+        ('$trade_info', UserCommandTradeInfo)
     ])
 
 
