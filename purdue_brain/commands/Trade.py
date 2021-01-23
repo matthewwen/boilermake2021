@@ -22,8 +22,9 @@ class UserCommandTrade(UserCommand):
         super().__init__(author, content, response)
 
     async def run(self):
-        r.login(os.getenv('ROBINHOOD_USERNAME'), os.getenv('ROBINHOOD_PASSWORD'))
-        stock = self.content.replace('$trade ', '').upper().split()
+        #r.login(os.getenv('ROBINHOOD_USERNAME'), os.getenv('ROBINHOOD_PASSWORD'))
+        stock = self.content.replace('$order ', '').upper().split()
+        print(stock)
         name, symbol, quanity, buy_sell, limit_price, stop_price, timeout_code = stock
 
         message = order_information(name, symbol, quanity, buy_sell, limit_price, stop_price, timeout_code)
