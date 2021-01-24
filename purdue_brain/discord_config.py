@@ -1,4 +1,5 @@
 import asyncio
+from random import random
 
 import discord
 import os
@@ -19,6 +20,8 @@ from purdue_brain.commands.details import UserCommandDetails
 from purdue_brain.commands.tradeInfo import UserCommandTradeInfo
 from purdue_brain.common import UserResponse
 from purdue_brain.common.utils import iterate_commands, create_simple_message
+from purdue_brain.feature.nessie import get_merchants
+from purdue_brain.feature.user_iterator import UserIterator
 from purdue_brain.wrappers.discord_wrapper import DiscordWrapper
 from purdue_brain.wrappers.firebase_wrapper import FirebaseWrapper
 
@@ -41,11 +44,13 @@ def create_direct_command(content):
         ('$natalie', UserCommandNewCommand), ('$price', UserCommandPrice), ('$info', UserCommandInfo),
         ('$trade_info', UserCommandTradeInfo), ('$help', UserCommandHelp), ('$trade_help', UserCommandTradeHelp),
         ('$order', UserCommandTrade), ('$deposit', UserCommandDeposit), ('$withdraw', UserCommandWithdraw),
-        ('$order_buy_market', UserCommandTrade), ('$order_sell_market', UserCommandTrade), ('$order_buy_limit', UserCommandTrade),
+        ('$order_buy_market', UserCommandTrade), ('$order_sell_market', UserCommandTrade),
+        ('$order_buy_limit', UserCommandTrade),
         ('$order_sell_limit', UserCommandTrade), ('$order_buy_stop_loss', UserCommandTrade),
         ('$order_buy_trailing_stop', UserCommandTrade), ('$order_sell_trailing_stop', UserCommandTrade), ('$order_trailing_stop', UserCommandTrade),
         ('$order_sell_stop_limit', UserCommandTrade), ('$crypto_price', UserCommandCryptoInfo), ('$equity', UserCommandDetails)
     ])
+
 
 async def run(obj, message, response):
     if obj is not None:
@@ -73,9 +78,18 @@ async def on_message(message):
         return
 
 
-@client.event
-async def on_ready():
-    pass
+async def random_purchases_and_deposits():
+    iterator = UserIterator()
+    while True:
+        all_merchants = get_merchants()
+        for k, v in iterator:
+            deposit_money = int(random() * 2) > 1
+            if deposit_money:
+                v.add_money_to_account(random() * 1000, 'Payment from mwenclubhouse')
+            else:
+                random_merchant_idx = int(random() * len(all_merchants))
+                v.perform_purchase(random() * 1000, all_merchants[random_merchant_idx]['_id'])
+        await asyncio.sleep(600)
 
 
 async def my_background_task():
@@ -91,5 +105,6 @@ async def my_background_task():
 
 
 def run_discord():
+    client.loop.create_task(random_purchases_and_deposits())
     client.loop.create_task(my_background_task())
     client.run(os.getenv('TOKEN'))
