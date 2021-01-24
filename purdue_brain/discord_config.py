@@ -37,32 +37,43 @@ async def on_ready():
     pass
 
 
-def create_direct_command(content):
+def create_channel_command(content):
     return iterate_commands(content, [
-        ('$add_bank', UserAddApiKey),
-        ('$hi', UserCommand), ('$helloworld', UserCommandHelloWorld),
-        ('$natalie', UserCommandNewCommand), ('$price', UserCommandPrice), ('$info', UserCommandInfo),
+        ('$price', UserCommandPrice), ('$info', UserCommandInfo),
         ('$trade_info', UserCommandTradeInfo), ('$help', UserCommandHelp), ('$trade_help', UserCommandTradeHelp),
-        ('$order', UserCommandTrade), ('$deposit', UserCommandDeposit), ('$withdraw', UserCommandWithdraw),
+        ('$order', UserCommandTrade),
         ('$order_buy_market', UserCommandTrade), ('$order_sell_market', UserCommandTrade),
         ('$order_buy_limit', UserCommandTrade),
         ('$order_sell_limit', UserCommandTrade), ('$order_buy_stop_loss', UserCommandTrade),
-        ('$order_buy_trailing_stop', UserCommandTrade), ('$order_sell_trailing_stop', UserCommandTrade), ('$order_trailing_stop', UserCommandTrade),
-        ('$order_sell_stop_limit', UserCommandTrade), ('$crypto_price', UserCommandCryptoInfo), ('$equity', UserCommandDetails),
-        ('$recent', GetAccountInfo)
+        ('$order_buy_trailing_stop', UserCommandTrade), ('$order_sell_trailing_stop', UserCommandTrade),
+        ('$order_trailing_stop', UserCommandTrade),
+        ('$order_sell_stop_limit', UserCommandTrade), ('$crypto_price', UserCommandCryptoInfo),
+        ('$equity', UserCommandDetails),
     ])
 
 
-async def run(obj, message, response):
+def create_direct_command(content):
+    return iterate_commands(content, [
+        ('$add_bank', UserAddApiKey), ('$deposit', UserCommandDeposit), ('$withdraw', UserCommandWithdraw),
+        ('$equity', UserCommandDetails), ('$recent', GetAccountInfo)
+    ])
+
+
+async def run(obj, message, response, is_dm=False):
     if obj is not None:
         inst: UserCommand = obj(message.author, message.content, response)
+        if type(inst) == UserCommandDetails:
+            inst.show_all = is_dm
         await response.send_loading(message)
         await inst.run()
 
 
-async def handle_direct_message(message, response: UserResponse):
+async def handle_channel_message(message, response: UserResponse):
     if not response.done:
         if type(message.channel) is discord.TextChannel and str(message.channel.id) == os.getenv('DISCORD_CHANNEL'):
+            content = message.content.lower()
+            await run(create_channel_command(content), message, response)
+        if type(message.channel) is discord.DMChannel:
             content = message.content.lower()
             await run(create_direct_command(content), message, response)
 
@@ -73,7 +84,7 @@ async def on_message(message):
         return
 
     response: UserResponse = UserResponse()
-    await handle_direct_message(message, response)
+    await handle_channel_message(message, response)
     if response.done:
         await response.send_message(message)
         return
