@@ -3,6 +3,7 @@ from purdue_brain.common import UserResponse, create_simple_message
 import robin_stocks as r
 import os
 
+from purdue_brain.common.utils import get_attribute
 
 def findEquity(market_value, crypto, total_equity, change, show_all_equity=True):
     message = None
@@ -12,15 +13,6 @@ def findEquity(market_value, crypto, total_equity, change, show_all_equity=True)
         message = create_simple_message('Crypto Value', '${:,.2f}'.format(float(crypto)), embed=message)
     message = create_simple_message('Daily Change', '{:,.5f}%'.format(float(change)), embed=message)
     return message
-
-
-def get_attribute(obj, items, default=None):
-    for i in items:
-        if obj is not None and i in obj:
-            obj = obj[i]
-        else:
-            return default
-    return obj
 
 
 class UserCommandDetails(UserCommand):
@@ -38,7 +30,11 @@ class UserCommandDetails(UserCommand):
         curr = float(get_attribute(profile, ['portfolio_equity', 'amount'], default=0))
         prev = float(get_attribute(profile, ['portfolio_previous_close', 'amount'], default=0))
         change = (curr - prev) / prev * 100
+<<<<<<< HEAD
         message = findEquity(market_value, crypto_value, equity, change, self.show_all)
+=======
+        message = findEquity(market_value, crypto_value, equity, change)
+>>>>>>> origin/main
         self.response.add_response(message)
 
         if len(self.response.response) == 0:

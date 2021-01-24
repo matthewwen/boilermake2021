@@ -15,6 +15,8 @@ class UserCommandHelp(UserCommand):
         message = create_simple_message('$trade_info [SYMBOL]', "Gives detailed information about the stock", embed=message)
         message = create_simple_message('$deposit [USD]', "Allows you to deposit money from your connected bank account", embed=message)
         message = create_simple_message('$withdraw [USD]', "Allows you to withdraw money to your connected bank account", embed=message)
+        message = create_simple_message('$equity', "Gives you information about your total portfolio's equity, including daily gains/losses", embed=message)
+        message = create_simple_message('$add_bank', "Connects your capital one bank account to the bot", embed=message)
         message = create_simple_message('$trade_help', 'Gives detailed information about trading commands', embed=message)
 
         self.response.set_state(True)
