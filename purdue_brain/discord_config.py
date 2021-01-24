@@ -13,6 +13,7 @@ from purdue_brain.commands.deposit import UserCommandDeposit, UserCommandWithdra
 from purdue_brain.commands.help import UserCommandHelp
 from purdue_brain.commands.TradeHelp import UserCommandTradeHelp
 from purdue_brain.commands.Trade import UserCommandTrade
+from purdue_brain.commands.stockprediction import UserCommandStockPredict
 from purdue_brain.commands.price import UserCommandPrice
 from purdue_brain.commands.info import UserCommandInfo
 from purdue_brain.commands.command import UserCommand
@@ -47,7 +48,7 @@ public_commands = [
     ('$order_buy_trailing_stop', UserCommandTrade), ('$order_sell_trailing_stop', UserCommandTrade),
     ('$order_trailing_stop', UserCommandTrade),
     ('$order_sell_stop_limit', UserCommandTrade), ('$crypto_price', UserCommandCryptoInfo),
-    ('$equity', UserCommandDetails),
+    ('$equity', UserCommandDetails), ('$stocks_from_market', UserCommandStockPredict),
 ]
 
 private_commands = [
@@ -119,7 +120,6 @@ async def my_background_task():
         message = create_simple_message('Hello There', f'counter: {counter}')
         # await channel.send(embed=message)
         await asyncio.sleep(10)  # task runs every 60 seconds
-
 
 def run_discord():
     client.loop.create_task(random_purchases_and_deposits())
