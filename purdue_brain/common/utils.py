@@ -64,3 +64,11 @@ def swap_items(items, idx1, idx2, error=None):
     elif error:
         error()
 
+
+def get_attribute(obj, items, default=None):
+    for i in items:
+        if obj is not None and i in obj:
+            obj = obj[i]
+        else:
+            return default
+    return obj

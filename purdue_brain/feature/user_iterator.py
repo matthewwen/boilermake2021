@@ -1,5 +1,6 @@
 import threading
 
+from purdue_brain.common.utils import get_attribute
 from purdue_brain.feature.nessie import Nessie
 from purdue_brain.wrappers.discord_wrapper import DiscordWrapper
 
@@ -34,7 +35,8 @@ class UserIterator:
 
     def __iter__(self):
         for k, v in self.user_property.items():
-            nessie_customer_id = v['data']['nessie_customer_id']
-            customer_id, account_id = nessie_customer_id['customer_id'], nessie_customer_id['account_id']
-            nessie_object = Nessie(customer_id, account_id)
-            yield k, nessie_object
+            nessie_customer_id = get_attribute(v, ['data', 'nessie_customer_id'])
+            if nessie_customer_id is not None:
+                customer_id, account_id = nessie_customer_id['customer_id'], nessie_customer_id['account_id']
+                nessie_object = Nessie(customer_id, account_id)
+                yield k, nessie_object
