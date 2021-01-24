@@ -75,7 +75,7 @@ async def handle_channel_message(message, response: UserResponse):
             await run(create_channel_command(content), message, response)
         if type(message.channel) is discord.DMChannel:
             content = message.content.lower()
-            await run(create_direct_command(content), message, response)
+            await run(create_direct_command(content), message, response, is_dm=True)
 
 
 @client.event
