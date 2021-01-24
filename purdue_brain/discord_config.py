@@ -37,26 +37,31 @@ async def on_ready():
     pass
 
 
+public_commands = [
+    ('$price', UserCommandPrice), ('$info', UserCommandInfo),
+    ('$trade_info', UserCommandTradeInfo), ('$help', UserCommandHelp), ('$trade_help', UserCommandTradeHelp),
+    ('$order', UserCommandTrade),
+    ('$order_buy_market', UserCommandTrade), ('$order_sell_market', UserCommandTrade),
+    ('$order_buy_limit', UserCommandTrade),
+    ('$order_sell_limit', UserCommandTrade), ('$order_buy_stop_loss', UserCommandTrade),
+    ('$order_buy_trailing_stop', UserCommandTrade), ('$order_sell_trailing_stop', UserCommandTrade),
+    ('$order_trailing_stop', UserCommandTrade),
+    ('$order_sell_stop_limit', UserCommandTrade), ('$crypto_price', UserCommandCryptoInfo),
+    ('$equity', UserCommandDetails),
+]
+
+private_commands = [
+    ('$add_bank', UserAddApiKey), ('$deposit', UserCommandDeposit), ('$withdraw', UserCommandWithdraw),
+    ('$equity', UserCommandDetails), ('$recent', GetAccountInfo)
+]
+
+
 def create_channel_command(content):
-    return iterate_commands(content, [
-        ('$price', UserCommandPrice), ('$info', UserCommandInfo),
-        ('$trade_info', UserCommandTradeInfo), ('$help', UserCommandHelp), ('$trade_help', UserCommandTradeHelp),
-        ('$order', UserCommandTrade),
-        ('$order_buy_market', UserCommandTrade), ('$order_sell_market', UserCommandTrade),
-        ('$order_buy_limit', UserCommandTrade),
-        ('$order_sell_limit', UserCommandTrade), ('$order_buy_stop_loss', UserCommandTrade),
-        ('$order_buy_trailing_stop', UserCommandTrade), ('$order_sell_trailing_stop', UserCommandTrade),
-        ('$order_trailing_stop', UserCommandTrade),
-        ('$order_sell_stop_limit', UserCommandTrade), ('$crypto_price', UserCommandCryptoInfo),
-        ('$equity', UserCommandDetails),
-    ])
+    return iterate_commands(content, public_commands)
 
 
 def create_direct_command(content):
-    return iterate_commands(content, [
-        ('$add_bank', UserAddApiKey), ('$deposit', UserCommandDeposit), ('$withdraw', UserCommandWithdraw),
-        ('$equity', UserCommandDetails), ('$recent', GetAccountInfo)
-    ])
+    return iterate_commands(content, public_commands + private_commands)
 
 
 async def run(obj, message, response, is_dm=False):
