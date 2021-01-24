@@ -10,6 +10,7 @@ class UserIterator:
         self.callback_done = threading.Event()
         self.user_property = dict()
         self.iterate_property = iterate_property
+        self.on_database_change()
 
     def clear_user_property(self):
         for k, _ in self.user_property.items():
@@ -33,7 +34,7 @@ class UserIterator:
 
     def __iter__(self):
         for k, v in self.user_property.items():
-            nessie_customer_id = v['nessie_customer_id']
+            nessie_customer_id = v['data']['nessie_customer_id']
             customer_id, account_id = nessie_customer_id['customer_id'], nessie_customer_id['account_id']
             nessie_object = Nessie(customer_id, account_id)
             yield k, nessie_object
