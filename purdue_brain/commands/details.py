@@ -3,48 +3,38 @@ from purdue_brain.common import UserResponse, create_simple_message
 import robin_stocks as r
 import os
 
-def company_stock_info(name, symbol, price, market, details, industry, link):
-    message = create_simple_message('Company', name)
-    message = create_simple_message('Symbol', symbol, embed=message)
-    message = create_simple_message('Price per share', '${:,.2f}'.format(float(price)), embed=message)
-    message = create_simple_message('Market cap', '${:,.2f}'.format(float(market)), embed=message)
-    message = create_simple_message('About', f'{cut_off_sentence(details)}', embed=message)
-    message = create_simple_message('Industry', industry, embed=message)
-    message = create_simple_message('More info', link, embed=message)
+def findEquity(market_value, crypto, total_equity):
+    message = create_simple_message('Total Equity', '${:,.2f}'.format(float(total_equity)))
+    message = create_simple_message('Stock Value', '${:,.2f}'.format(float(market_value)), embed=message)
+    message = create_simple_message('Crypto Value', '${:,.2f}'.format(float(crypto)), embed=message)
     return message
 
 
-class UserCommandInfo(UserCommand):
+class UserCommandDetails(UserCommand):
 
     def __init__(self, author, content, response: UserResponse):
         super().__init__(author, content, response)
 
     async def run(self):
         r.login(os.getenv('ROBINHOOD_USERNAME'), os.getenv('ROBINHOOD_PASSWORD'))
-        details = r.account.load_phoenix_account()
-        stock = self.content.replace('$info ', '').upper().split()
-        for s in stock:
-            instrumental_data = r.stocks.find_instrument_data(s)
-            fund = r.stocks.get_fundamentals(s)
+        profile = r.account.load_phoenix_account()
+        # print(profile)
+        for p in [profile]:
+            for l in [p['equities']]:
+                for j in [l['market_value']]:
+                    market_value = j['amount']
+                    # print(j['amount'])
+            for l in [p['total_equity']]:
+                equity = l['amount']
+                # print(l['amount'])
+            for l in [p['crypto']]:
+                for j in [l['market_value']]:
+                    crypto_value = j['amount']
+                    # print(j['amount'])
 
-            for d, f in zip(instrumental_data, fund):
-                if None in [d, f]:
-                    message = "'" + s + "' stock symbol doesn't exist."
-                    self.response.set_state(False)
-                    self.response.add_response(message)
-                    continue
-                name = d['simple_name']
-                symbol = d['symbol']
-                price = r.stocks.get_latest_price(symbol)[0]
-                link = 'https://robinhood.com/stocks/' + symbol
 
-                details = f['description']
-                market = f['market_cap']
-                industry = f['industry']
-
-                message = company_stock_info(name, symbol, price, market, details, industry, link)
-                self.response.set_state(True)
-                self.response.add_response(message)
+            message = findEquity(market_value, crypto_value, equity)
+            self.response.add_response(message)
 
         if len(self.response.response) == 0:
             self.response.set_error_response(0)

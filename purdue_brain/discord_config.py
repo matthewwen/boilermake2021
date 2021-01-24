@@ -15,6 +15,7 @@ from purdue_brain.commands.Trade import UserCommandTrade
 from purdue_brain.commands.price import UserCommandPrice
 from purdue_brain.commands.info import UserCommandInfo
 from purdue_brain.commands.command import UserCommand
+from purdue_brain.commands.details import UserCommandDetails
 from purdue_brain.commands.tradeInfo import UserCommandTradeInfo
 from purdue_brain.common import UserResponse
 from purdue_brain.common.utils import iterate_commands, create_simple_message
@@ -33,10 +34,6 @@ async def on_ready():
     pass
 
 
-class UserCommandDetails(object):
-    pass
-
-
 def create_direct_command(content):
     return iterate_commands(content, [
         ('$add_bank', UserAddApiKey),
@@ -47,8 +44,7 @@ def create_direct_command(content):
         ('$order_buy_market', UserCommandTrade), ('$order_sell_market', UserCommandTrade), ('$order_buy_limit', UserCommandTrade),
         ('$order_sell_limit', UserCommandTrade), ('$order_buy_stop_loss', UserCommandTrade),
         ('$order_buy_trailing_stop', UserCommandTrade), ('$order_sell_trailing_stop', UserCommandTrade), ('$order_trailing_stop', UserCommandTrade),
-        ('$order_sell_stop_limit', UserCommandTrade),
-        ('$crypto_price', UserCommandCryptoInfo)
+        ('$order_sell_stop_limit', UserCommandTrade), ('$crypto_price', UserCommandCryptoInfo), ('$equity', UserCommandDetails)
     ])
 
 async def run(obj, message, response):
