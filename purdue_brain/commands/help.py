@@ -18,7 +18,7 @@ class UserCommandHelp(UserCommand):
         message = create_simple_message('$equity', "Gives you information about your total portfolio's equity, including daily gains/losses", embed=message)
         message = create_simple_message('$add_bank', "Connects your capital one bank account to the bot", embed=message)
         message = create_simple_message('$trade_help', 'Gives detailed information about trading commands', embed=message)
-
+        message = create_simple_message('$stocks_from_market [MARKET TAG]', 'Possible Tags: https://mattrode.com/blog/robinhood-collections-list/', embed=message)
         self.response.set_state(True)
         self.response.add_response(message)
 
