@@ -42,6 +42,20 @@ def get_merchants():
     return content if is_valid else None
 
 
+def get_purchase_details(purchase_id):
+    url = endpoint_url + f"/purchases/{purchase_id}?key={api_key}"
+    is_valid, response = process_get(url)
+    content = create_content(response)
+    return content if is_valid else None
+
+
+def get_merchant_details(merchant_id):
+    url = endpoint_url + f"/merchants/{merchant_id}?key={api_key}"
+    is_valid, response = process_get(url)
+    content = create_content(response)
+    return content if is_valid else None
+
+
 def get_robinhood_merchant():
     config = DiscordWrapper.fire.get_discord_config()
     if 'robinhood_merchant_id' in config:
@@ -76,6 +90,14 @@ class Nessie:
     def __init__(self, customer_id, account_id):
         self.customer_id = customer_id
         self.account_id = account_id
+
+    @staticmethod
+    def get_nessile_from_user_id(author_id):
+        account_information = DiscordWrapper.fire.get_property('nessie_customer_id', author_id)
+        if account_information:
+            account_id, customer_id = account_information['account_id'], account_information['customer_id']
+            return Nessie(customer_id, account_id)
+        return None
 
     def get_customer_data(self):
         url = endpoint_url + f"/accounts/{self.account_id}?key={api_key}"

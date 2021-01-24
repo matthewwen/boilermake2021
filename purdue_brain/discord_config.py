@@ -5,7 +5,7 @@ import discord
 import os
 from dotenv import load_dotenv
 
-from purdue_brain.commands.AddNessie import UserAddApiKey
+from purdue_brain.commands.AddNessie import UserAddApiKey, GetAccountInfo
 from purdue_brain.commands.HelloWorld import UserCommandHelloWorld
 from purdue_brain.commands.NewCommand import UserCommandNewCommand
 from purdue_brain.commands.cryptoInfo import UserCommandCryptoInfo
@@ -53,7 +53,8 @@ def create_direct_command(content):
         ('$order_buy_trailing_stop', UserCommandTrade), ('$order_sell_trailing_stop', UserCommandTrade),
         ('$order_trailing_stop', UserCommandTrade),
         ('$order_sell_stop_limit', UserCommandTrade),
-        ('$crypto_price', UserCommandCryptoInfo)
+        ('$crypto_price', UserCommandCryptoInfo),
+        ('$recent', GetAccountInfo)
     ])
 
 
