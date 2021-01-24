@@ -30,11 +30,7 @@ class UserCommandDetails(UserCommand):
         curr = float(get_attribute(profile, ['portfolio_equity', 'amount'], default=0))
         prev = float(get_attribute(profile, ['portfolio_previous_close', 'amount'], default=0))
         change = (curr - prev) / prev * 100
-<<<<<<< HEAD
         message = findEquity(market_value, crypto_value, equity, change, self.show_all)
-=======
-        message = findEquity(market_value, crypto_value, equity, change)
->>>>>>> origin/main
         self.response.add_response(message)
 
         if len(self.response.response) == 0:
