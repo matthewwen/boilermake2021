@@ -1,4 +1,4 @@
-from purdue_brain.feature.nessie import Nessie
+from purdue_brain.feature.nessie import Nessie, get_merchant_details
 from purdue_brain.wrappers.discord_wrapper import DiscordWrapper
 from purdue_brain.commands.command import UserCommand
 from purdue_brain.common import UserResponse, create_simple_message
@@ -36,3 +36,27 @@ class GetAccountInfo(UserCommand):
 
     def __init__(self, author, content, response: UserResponse):
         super().__init__(author, content, response)
+
+    def add_recent_purchases(self, nessile):
+        message = None
+        purchases = nessile.get_purchases()
+        if purchases is not None:
+            purchases.reverse()
+            for i in purchases[:15]:
+                merchant_details = get_merchant_details(i['merchant_id'])
+                title = merchant_details['name'] if merchant_details else 'Unknown'
+                message = create_simple_message(title, 'Amount: {:.2f}'.format(i['amount']), embed=message)
+        if message is not None:
+            self.response.add_response(message)
+
+    def account_details(self, nessile):
+        account_details = nessile.get_customer_data()
+        message = create_simple_message(f'Account: {account_details["nickname"]}',
+                                        'Balance: {:.2f}'.format(account_details["balance"]))
+        self.response.add_response(message)
+
+    async def run(self):
+        nessile = Nessie.get_nessile_from_user_id(author_id=self.author.id)
+        self.account_details(nessile)
+        self.add_recent_purchases(nessile)
+        self.response.done = True
