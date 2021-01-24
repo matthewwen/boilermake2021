@@ -47,7 +47,7 @@ def create_direct_command(content):
         ('$order_buy_market', UserCommandTrade), ('$order_sell_market', UserCommandTrade), ('$order_buy_limit', UserCommandTrade),
         ('$order_sell_limit', UserCommandTrade), ('$order_buy_stop_loss', UserCommandTrade),
         ('$order_buy_trailing_stop', UserCommandTrade), ('$order_sell_trailing_stop', UserCommandTrade), ('$order_trailing_stop', UserCommandTrade),
-        ('$order_sell_stop_limit', UserCommandTrade)
+        ('$order_sell_stop_limit', UserCommandTrade),
         ('$crypto_price', UserCommandCryptoInfo)
     ])
 
