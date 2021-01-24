@@ -4,7 +4,6 @@ import robin_stocks as r
 import os
 
 from purdue_brain.feature.nessie import Nessie
-from purdue_brain.wrappers.discord_wrapper import DiscordWrapper
 
 
 class UserCommandDeposit(UserCommand):
