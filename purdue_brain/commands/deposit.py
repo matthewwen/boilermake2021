@@ -3,6 +3,8 @@ from purdue_brain.common import UserResponse, create_simple_message
 import robin_stocks as r
 import os
 
+from purdue_brain.feature.nessie import Nessie
+
 
 class UserCommandDeposit(UserCommand):
 
@@ -24,6 +26,7 @@ class UserCommandDeposit(UserCommand):
         r.login(os.getenv('ROBINHOOD_USERNAME'), os.getenv('ROBINHOOD_PASSWORD'))
         args = self.content.replace('$deposit ', '').upper()
         details = r.account.get_linked_bank_accounts()
+        nessile = Nessie.get_nessile_from_user_id(author_id=self.author.id)
         for d in details:
             try:
                 args = float(args)
@@ -32,8 +35,10 @@ class UserCommandDeposit(UserCommand):
                     successful = False
                 elif os.getenv('CONNECT') == 'True':
                     successful, message = self.parse_transaction(args, args, d)
+                    nessile.perform_purchase(args, description='${:2f} added to Robinhood'.format(args))
                 else:
                     successful, message = self.parse_transaction(0.01, args, d)
+                    nessile.perform_purchase(args, description='${:2f} added to Robinhood'.format(args))
                 self.response.add_response(message)
             except:
                 message = '❌ Error: Make sure to include only numbers in your command!'
@@ -63,6 +68,7 @@ class UserCommandWithdraw(UserCommand):
         r.login(os.getenv('ROBINHOOD_USERNAME'), os.getenv('ROBINHOOD_PASSWORD'))
         args = self.content.replace('$withdraw ', '').upper()
         details = r.account.get_linked_bank_accounts()
+        nessile = Nessie.get_nessile_from_user_id(author_id=self.author.id)
         for d in details:
             try:
                 args = float(args)
@@ -71,8 +77,10 @@ class UserCommandWithdraw(UserCommand):
                     successful = False
                 elif os.getenv('CONNECT') == 'True':
                     successful, message = self.parse_withdraw(args, args, d)
+                    nessile.add_money_to_account(args, description='Money from Robinhood')
                 else:
                     successful, message = self.parse_withdraw(0.01, args, d)
+                    nessile.add_money_to_account(args, description='Money from Robinhood')
                 self.response.add_response(message)
             except:
                 message = '❌ Error: Make sure to include only numbers in your command!'

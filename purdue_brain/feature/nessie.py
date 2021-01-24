@@ -79,8 +79,8 @@ def get_robinhood_merchant():
     is_valid, response = process_request(url, payload)
     content = create_content(response)
     if is_valid:
-        robinhood_id = content['objectCreated']
-        DiscordWrapper.fire.set_discord_config({'robhinhood_merchant_id': robinhood_id})
+        robinhood_id = content['objectCreated']['_id']
+        DiscordWrapper.fire.set_discord_config({'robinhood_merchant_id': robinhood_id})
         return robinhood_id
     return None
 

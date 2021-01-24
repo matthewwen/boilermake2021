@@ -45,18 +45,27 @@ class GetAccountInfo(UserCommand):
             for i in purchases[:15]:
                 merchant_details = get_merchant_details(i['merchant_id'])
                 title = merchant_details['name'] if merchant_details else 'Unknown'
-                message = create_simple_message(title, 'Amount: {:.2f}'.format(i['amount']), embed=message)
+                message = create_simple_message(title, 'Amount: ${:.2f}'.format(i['amount']), embed=message)
         if message is not None:
+            message.title = "Recent Purchases"
             self.response.add_response(message)
 
     def account_details(self, nessile):
         account_details = nessile.get_customer_data()
-        message = create_simple_message(f'Account: {account_details["nickname"]}',
-                                        'Balance: {:.2f}'.format(account_details["balance"]))
-        self.response.add_response(message)
+        if account_details and 'nickname' in account_details and 'balance' in account_details:
+            message = create_simple_message(f'Account: {account_details["nickname"]}',
+                                            'Balance: ${:.2f}'.format(account_details["balance"]))
+            self.response.add_response(message)
+        else:
+            self.response.set_error_response(0, True)
 
     async def run(self):
         nessile = Nessie.get_nessile_from_user_id(author_id=self.author.id)
-        self.account_details(nessile)
-        self.add_recent_purchases(nessile)
-        self.response.done = True
+        if nessile is None:
+            message = create_simple_message('Bank Issue', 'DM bot $add_bank to add your bank')
+            self.response.add_response(message, False)
+            self.response.set_state(False, True)
+        else:
+            self.account_details(nessile)
+            self.add_recent_purchases(nessile)
+            self.response.done = True
