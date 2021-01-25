@@ -9,7 +9,6 @@ class UserCommandHelloWorld(UserCommand):
         print(content)
 
     async def run(self):
-        r.login('brianmlatimer@gmail.com', 'HackathonPassword1')
         message = create_simple_message("Suhanan", "Says Hello")
         message = create_simple_message("AMZN", '$' + r.stocks.get_latest_price('Amzn')[0])
         self.response.add_response(message, True)

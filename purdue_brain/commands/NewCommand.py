@@ -9,7 +9,5 @@ class UserCommandNewCommand(UserCommand):
         super().__init__(author, content, response)
 
     async def run(self):
-        print(DiscordWrapper.fire.get_user(self.author.id))
-        DiscordWrapper.fire.set_property('bitch', self.author.id, 'corevette corvette')
         message = create_simple_message("Suhanan", "Says Hello")
         self.response.add_response(message, True)
